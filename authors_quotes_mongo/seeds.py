@@ -18,20 +18,21 @@ def get_date(date_str):
     date = datetime(year=year, month=month, day=day).date()
     return date
 
-def get_author(author_name):
+def get_author(author_name, authors_list):
     for auth_from_lst in authors_list:
         if auth_from_lst.fullname == author_name:
             return auth_from_lst
 
-authors_list = []
-for author in authors:
-    a = Authors(fullname=author['fullname'], born_date=get_date(author['born_date']), \
-             born_location=author['born_location'], description=author['description']).save()
-    
-    authors_list.append(a)
+def main_seeds_f():
+    authors_list = []
+    for author in authors:
+        a = Authors(fullname=author['fullname'], born_date=get_date(author['born_date']), \
+                born_location=author['born_location'], description=author['description']).save()
+        
+        authors_list.append(a)
 
-quotes_list = []
-for quote in quotes:
-    q = Quotes(tags=quote['tags'], author=get_author(quote['author']), quote=quote['quote']).save()
+    for quote in quotes:
+        Quotes(tags=quote['tags'], author=get_author(quote['author'], authors_list), quote=quote['quote']).save()
 
-    quotes_list.append(q)
+if __name__ == '__main__':
+    main_seeds_f()
